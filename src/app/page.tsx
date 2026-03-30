@@ -18,10 +18,8 @@ function BearOffsetApp() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
-  // Default date: March 1st 2026
   const defaultDateStr = "2026-03-01"
 
-  // State from URL params or defaults
   const [stakedSol, setStakedSol] = useState(
     parseFloat(searchParams.get("sol") ?? "100")
   )
@@ -45,15 +43,12 @@ function BearOffsetApp() {
   const [liveYieldApy, setLiveYieldApy] = useState<number | null>(null)
   const [priceFetchKey, setPriceFetchKey] = useState(0)
 
-  // Fetch current SOL price and live APY on mount
   useEffect(() => {
     async function fetchCurrentPrice() {
       try {
         const res = await fetch("/api/price")
         const data = await res.json()
-        if (data.price) {
-          setCurrentPrice(data.price)
-        }
+        if (data.price) setCurrentPrice(data.price)
       } catch (err) {
         console.error("Failed to fetch current price:", err)
       } finally {
@@ -69,9 +64,7 @@ function BearOffsetApp() {
           setLiveYieldApy(data.yieldApy * 100)
           updateProviderApy("yield", data.yieldApy)
         }
-        if (data.phaseApy) {
-          updateProviderApy("phase", data.phaseApy)
-        }
+        if (data.phaseApy) updateProviderApy("phase", data.phaseApy)
       } catch (err) {
         console.error("Failed to fetch live APY:", err)
       }
@@ -81,18 +74,14 @@ function BearOffsetApp() {
     fetchLiveApy()
   }, [])
 
-  // Fetch historical price when entry date changes
   useEffect(() => {
     if (!entryDate) return
-
     async function fetchHistoricalPrice() {
       setIsLoadingPrice(true)
       try {
         const res = await fetch(`/api/price?date=${entryDate}`)
         const data = await res.json()
-        if (data.price) {
-          setEntryPrice(data.price)
-        }
+        if (data.price) setEntryPrice(data.price)
       } catch (err) {
         console.error("Failed to fetch historical price:", err)
       } finally {
@@ -102,7 +91,6 @@ function BearOffsetApp() {
     fetchHistoricalPrice()
   }, [entryDate, priceFetchKey])
 
-  // Sync state to URL
   const syncUrl = useCallback(() => {
     const params = new URLSearchParams()
     params.set("sol", stakedSol.toString())
@@ -117,7 +105,6 @@ function BearOffsetApp() {
     return () => clearTimeout(timer)
   }, [syncUrl])
 
-  // Calculate result
   const provider = getProvider(providerId)
   const apy = providerId === "custom" ? customApy / 100 : provider.apy
   const daysStaked = daysBetween(new Date(entryDate), new Date())
@@ -139,21 +126,20 @@ function BearOffsetApp() {
     <main className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-[var(--glass-border)]">
-        <div className="max-w-5xl mx-auto px-6 py-6">
-          <h1 className="text-2xl sm:text-3xl font-display text-gold uppercase tracking-wide">
+        <div className="max-w-5xl mx-auto px-6 py-5">
+          <h1 className="text-xl sm:text-2xl font-display text-gold uppercase tracking-wide">
             Bear Offset Visualizer
           </h1>
-          <p className="text-sm text-muted-foreground font-light mt-1">
-            See how much staking could offset your losses when SOL drops
+          <p className="text-[13px] text-muted-foreground/60 font-light mt-0.5">
+            See how staking rewards cushion your losses when SOL drops
           </p>
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto px-6 py-8">
-        {/* Above the fold: 2-column layout on desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 items-start">
-          {/* Left: Inputs */}
-          <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl p-6">
+      <div className="max-w-5xl mx-auto px-6 py-6">
+        {/* 2-column: inputs left, result right */}
+        <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6 items-start">
+          <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl p-5">
             <InputForm
               stakedSol={stakedSol}
               entryDate={entryDate}
@@ -170,14 +156,12 @@ function BearOffsetApp() {
             />
           </div>
 
-          {/* Right: Results */}
-          <div className="min-h-[300px]">
+          <div className="min-h-[200px]">
             {isLoading && !result && (
-              <div className="flex items-center justify-center h-[300px]">
+              <div className="flex items-center justify-center h-[200px]">
                 <div className="w-5 h-5 border-[1.5px] border-gold/30 border-t-gold rounded-full animate-spin" />
               </div>
             )}
-
             {result && (
               <ResultCards
                 result={result}
@@ -189,9 +173,9 @@ function BearOffsetApp() {
           </div>
         </div>
 
-        {/* Below the fold: Chart, Share, CTAs */}
+        {/* Below fold — tight vertical stack */}
         {result && (
-          <div className="flex flex-col gap-8 mt-8">
+          <div className="flex flex-col gap-5 mt-6">
             <MissedRewards
               stakedSol={stakedSol}
               currentPrice={currentPrice!}
@@ -217,9 +201,8 @@ function BearOffsetApp() {
         )}
       </div>
 
-      {/* Footer */}
-      <footer className="border-t border-[var(--glass-border)] mt-12">
-        <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
+      <footer className="border-t border-[var(--glass-border)] mt-8">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <p className="text-[10px] text-muted-foreground/30 font-mono">
             bear.phaselabs.io
           </p>

@@ -44,12 +44,7 @@ export function InputForm({
   const providers = PROVIDERS.filter((p) => p.id !== "custom")
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Section label */}
-      <p className="font-mono text-[13px] uppercase tracking-[0.05em] text-foreground">
-        // YOUR POSITION
-      </p>
-
+    <div className="flex flex-col gap-5">
       {/* SOL Amount */}
       <div>
         <label className={labelClass}>SOL Staked</label>
