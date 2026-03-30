@@ -145,7 +145,8 @@ export function ShareCard({
           </div>
           <div className="font-mono text-[11px]">
             <span className="text-muted-foreground/50">Rewards </span>
-            <span className="text-green-400">+{formatSol(rewardsEarnedSol)} SOL</span>
+            <span className="text-green-400">+{formatUsd(rewardsEarnedUsd)}</span>
+            <span className="text-muted-foreground/40"> ({formatSol(rewardsEarnedSol)} SOL)</span>
           </div>
         </div>
 

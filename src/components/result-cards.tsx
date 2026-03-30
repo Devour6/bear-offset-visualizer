@@ -135,10 +135,10 @@ export function ResultCards({
             Rewards
           </p>
           <p className="font-mono text-sm font-medium text-green-400">
-            +{formatSol(rewardsEarnedSol)}
+            +{formatUsd(rewardsEarnedUsd)}
           </p>
           <p className="font-mono text-[10px] text-muted-foreground/50 mt-0.5">
-            ≈ {formatUsd(rewardsEarnedUsd)}
+            +{formatSol(rewardsEarnedSol)} SOL
           </p>
         </div>
 
