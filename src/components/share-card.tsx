@@ -32,8 +32,6 @@ export function ShareCard({
     rewardsEarnedUsd,
     usdDrawdown,
     priceChangePct,
-    netPositionUsd,
-    usdValueAtEntry,
   } = result
 
   const shareParams = new URLSearchParams({
@@ -49,12 +47,12 @@ export function ShareCard({
   const shareUrl = `https://bear.phaselabs.io/?${shareParams.toString()}`
   const ogUrl = `/api/og?${shareParams.toString()}`
 
-  // Clear, narrative-driven hero text
+  // Prospective, provider-specific hero text for sharing
   const heroText = isBullMode
-    ? `Staking boosted my SOL gains by ${formatPct(boostPct)}`
+    ? `Staking to ${providerName} would have boosted my SOL gains by ${formatPct(boostPct)}`
     : offsetPct >= 100
-      ? `Staking rewards fully covered my SOL price drop`
-      : `Staking recovered ${formatPct(offsetPct)} of my SOL losses`
+      ? `Staking to ${providerName} would have fully covered my SOL losses`
+      : `Staking to ${providerName} would have recovered ${formatPct(offsetPct)} of my SOL losses`
 
   const tweetText = encodeURIComponent(
     `${heroText} — powered by @phase_\n\n${shareUrl}`
@@ -108,25 +106,25 @@ export function ShareCard({
           </span>
         </div>
 
-        {/* Narrative explanation */}
+        {/* Narrative explanation — prospective */}
         <p className="text-sm text-foreground/70 font-light mt-2 mb-4 max-w-lg leading-relaxed">
           {isBullMode ? (
             <>
-              SOL rose {formatPct(Math.abs(priceChangePct))} — but staking earned an additional{" "}
+              SOL rose {formatPct(Math.abs(priceChangePct))} — staking to {providerName} would have earned an additional{" "}
               <span className="text-green-400 font-medium">+{formatSol(rewardsEarnedSol)} SOL</span>{" "}
               ({formatUsd(rewardsEarnedUsd)}) on top of price gains.
             </>
           ) : offsetPct >= 100 ? (
             <>
-              SOL dropped {formatPct(Math.abs(priceChangePct))}, but staking rewards of{" "}
+              SOL dropped {formatPct(Math.abs(priceChangePct))}, but staking to {providerName} would have earned{" "}
               <span className="text-green-400 font-medium">+{formatSol(rewardsEarnedSol)} SOL</span>{" "}
-              ({formatUsd(rewardsEarnedUsd)}) more than covered the{" "}
+              ({formatUsd(rewardsEarnedUsd)}) — more than covering the{" "}
               <span className="text-red-400">{formatUsd(Math.abs(usdDrawdown))}</span> drawdown.
             </>
           ) : (
             <>
               SOL dropped {formatPct(Math.abs(priceChangePct))} ({formatUsd(Math.abs(usdDrawdown))} loss),
-              but staking earned{" "}
+              but staking to {providerName} would have earned{" "}
               <span className="text-green-400 font-medium">+{formatSol(rewardsEarnedSol)} SOL</span>{" "}
               ({formatUsd(rewardsEarnedUsd)}) — recovering {formatPct(offsetPct)} of the drawdown.
             </>

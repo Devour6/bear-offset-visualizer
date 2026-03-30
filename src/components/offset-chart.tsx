@@ -42,8 +42,8 @@ export function OffsetChart({ data, isBullMode }: OffsetChartProps) {
         </div>
       </div>
 
-      <div className="h-[260px] -ml-2">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="h-[260px] min-w-0 -ml-2">
+        <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
           <AreaChart
             data={data}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}

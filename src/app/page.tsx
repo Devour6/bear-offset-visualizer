@@ -18,10 +18,8 @@ function BearOffsetApp() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
-  // Default date: 6 months ago
-  const defaultDate = new Date()
-  defaultDate.setMonth(defaultDate.getMonth() - 6)
-  const defaultDateStr = defaultDate.toISOString().split("T")[0]
+  // Default date: March 1st 2026
+  const defaultDateStr = "2026-03-01"
 
   // State from URL params or defaults
   const [stakedSol, setStakedSol] = useState(
@@ -146,7 +144,7 @@ function BearOffsetApp() {
             Bear Offset Visualizer
           </h1>
           <p className="text-sm text-muted-foreground font-light mt-1">
-            See how staking rewards cushion your losses when SOL drops
+            See how much staking could offset your losses when SOL drops
           </p>
         </div>
       </header>

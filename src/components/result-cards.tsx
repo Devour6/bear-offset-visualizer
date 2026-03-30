@@ -53,6 +53,17 @@ export function ResultCards({
       ? "bg-[var(--glass-bg-gold)] border-[var(--glass-border-gold)]"
       : "bg-[rgba(249,115,22,0.08)] border-[rgba(249,115,22,0.25)]"
 
+  // Prospective, provider-specific messaging
+  function getHeroMessage(): string {
+    if (isBullMode) {
+      return `SOL is up ${formatPct(Math.abs(priceChangePct))}. Staking to ${providerName} would have added ${formatUsd(rewardsEarnedUsd)} on top — extra gains you wouldn't have without staking.`
+    }
+    if (offsetPct >= 100) {
+      return `SOL dropped ${formatPct(Math.abs(priceChangePct))}, but staking to ${providerName} would have earned more than enough rewards to cover the loss. You'd be ${formatUsd(offsetSurplusUsd)} ahead of where you'd be without staking.`
+    }
+    return `SOL dropped ${formatPct(Math.abs(priceChangePct))}. Without staking to ${providerName}, you'd have lost ${formatUsd(Math.abs(usdDrawdown))}. Staking to ${providerName} would have earned ${formatUsd(rewardsEarnedUsd)} of that back — roughly ${formatPct(offsetPct)} of your losses recovered.`
+  }
+
   return (
     <div className="flex flex-col gap-4">
       {/* Hero offset number */}
@@ -74,11 +85,7 @@ export function ResultCards({
         </p>
 
         <p className="text-sm text-muted-foreground mt-3 font-light max-w-md leading-relaxed">
-          {isBullMode
-            ? `SOL is up ${formatPct(Math.abs(priceChangePct))}. Your staking rewards added ${formatUsd(rewardsEarnedUsd)} on top — money you wouldn't have without staking.`
-            : offsetPct >= 100
-              ? `SOL dropped, but your staking rewards earned more than you lost. You're ${formatUsd(offsetSurplusUsd)} ahead of where you'd be without staking.`
-              : `SOL dropped ${formatPct(Math.abs(priceChangePct))}. Without staking, you'd have lost ${formatUsd(Math.abs(usdDrawdown))}. Staking rewards recovered ${formatUsd(rewardsEarnedUsd)} of that — ${formatPct(offsetPct)} of your losses cushioned.`}
+          {getHeroMessage()}
         </p>
 
         {/* Inline comparison */}
@@ -94,7 +101,7 @@ export function ResultCards({
             </div>
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground/70 mb-1">
-                With staking
+                With {providerName}
               </p>
               <p className={`font-mono text-sm ${offsetPct >= 50 ? accentColor : "text-ember"}`}>
                 {formatUsd(netPositionUsd - usdValueAtEntry)}
