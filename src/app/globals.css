@@ -22,6 +22,16 @@
   --color-ember: #f97316;
   --color-phase-blue: #80d0ff;
 
+  /* Glass system */
+  --color-glass: var(--glass-bg);
+  --color-glass-hover: var(--glass-bg-hover);
+  --color-glass-border: var(--glass-border);
+  --color-glass-border-hover: var(--glass-border-hover);
+  --color-glass-gold: var(--glass-bg-gold);
+  --color-glass-gold-border: var(--glass-border-gold);
+  --color-glass-blue: var(--glass-bg-blue);
+  --color-glass-blue-border: var(--glass-border-blue);
+
   --font-sans: var(--font-outfit), system-ui, sans-serif;
   --font-display: var(--font-audiowide), sans-serif;
   --font-mono: var(--font-ibm-plex-mono), monospace;
@@ -46,6 +56,19 @@
   --primary-foreground: #0F0E0C;
   --destructive: #ef4444;
   --radius: 0.625rem;
+
+  /* Glass tokens */
+  --glass-bg: rgba(243, 238, 217, 0.05);
+  --glass-bg-hover: rgba(243, 238, 217, 0.1);
+  --glass-bg-active: rgba(243, 238, 217, 0.15);
+  --glass-border: rgba(243, 238, 217, 0.12);
+  --glass-border-hover: rgba(243, 238, 217, 0.2);
+  --glass-bg-gold: rgba(252, 225, 132, 0.08);
+  --glass-border-gold: rgba(252, 225, 132, 0.25);
+  --glass-bg-blue: rgba(128, 208, 255, 0.08);
+  --glass-border-blue: rgba(128, 208, 255, 0.25);
+  --glass-bg-green: rgba(34, 197, 94, 0.08);
+  --glass-border-green: rgba(34, 197, 94, 0.25);
 }
 
 @layer base {

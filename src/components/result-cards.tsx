@@ -1,6 +1,12 @@
 "use client"
 
-import { type OffsetResult, formatUsd, formatSol, formatPct, formatDuration } from "@/lib/calculations"
+import {
+  type OffsetResult,
+  formatUsd,
+  formatSol,
+  formatPct,
+  formatDuration,
+} from "@/lib/calculations"
 
 interface ResultCardsProps {
   result: OffsetResult
@@ -9,7 +15,12 @@ interface ResultCardsProps {
   providerName: string
 }
 
-export function ResultCards({ result, stakedSol, entryPrice, providerName }: ResultCardsProps) {
+export function ResultCards({
+  result,
+  stakedSol,
+  entryPrice,
+  providerName,
+}: ResultCardsProps) {
   const {
     priceChangePct,
     usdValueAtEntry,
@@ -25,162 +36,148 @@ export function ResultCards({ result, stakedSol, entryPrice, providerName }: Res
     boostPct,
   } = result
 
-  // Color tier for offset percentage
-  const offsetColor =
-    offsetPct >= 75
-      ? "text-green-400"
-      : offsetPct >= 25
-        ? "text-gold"
-        : "text-ember"
+  // Color tier
+  const isGreen = isBullMode || offsetPct >= 75
+  const isGold = !isBullMode && offsetPct >= 25 && offsetPct < 75
+  const isEmber = !isBullMode && offsetPct < 25
 
-  const offsetBorderColor =
-    offsetPct >= 75
-      ? "border-green-400/30"
-      : offsetPct >= 25
-        ? "border-gold/30"
-        : "border-ember/30"
+  const accentColor = isGreen
+    ? "text-green-400"
+    : isGold
+      ? "text-gold"
+      : "text-ember"
+
+  const glassVariant = isGreen
+    ? "bg-[var(--glass-bg-green)] border-[var(--glass-border-green)]"
+    : isGold
+      ? "bg-[var(--glass-bg-gold)] border-[var(--glass-border-gold)]"
+      : "bg-[rgba(249,115,22,0.08)] border-[rgba(249,115,22,0.25)]"
 
   return (
-    <div className="space-y-4">
-      {/* Hero Card: Net Result */}
-      <div
-        className={`relative overflow-hidden rounded-xl border ${
-          isBullMode ? "border-green-400/30" : offsetBorderColor
-        } bg-card p-6 sm:py-8`}
-      >
-        {/* Subtle gradient background */}
-        <div
-          className={`absolute inset-0 opacity-5 ${
-            isBullMode
-              ? "bg-gradient-to-br from-green-400 to-transparent"
-              : offsetPct >= 75
-                ? "bg-gradient-to-br from-green-400 to-transparent"
-                : offsetPct >= 25
-                  ? "bg-gradient-to-br from-gold to-transparent"
-                  : "bg-gradient-to-br from-ember to-transparent"
-          }`}
-        />
+    <div className="flex flex-col gap-4">
+      {/* Hero offset number */}
+      <div className={`${glassVariant} border rounded-xl p-6 sm:p-8`}>
+        <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground mb-2">
+          {isBullMode
+            ? "// STAKING BOOST"
+            : offsetPct >= 100
+              ? "// FULLY OFFSET"
+              : "// DRAWDOWN OFFSET"}
+        </p>
 
-        <div className="relative">
-          {isBullMode ? (
-            <>
-              <p className="text-sm text-muted-foreground font-mono uppercase tracking-wider mb-1">
-                Staking Boost
+        <p className={`text-5xl sm:text-7xl font-display ${accentColor} leading-none`}>
+          {isBullMode
+            ? `+${formatPct(boostPct)}`
+            : offsetPct >= 100
+              ? "100%"
+              : formatPct(offsetPct)}
+        </p>
+
+        <p className="text-sm text-muted-foreground mt-3 font-light max-w-md leading-relaxed">
+          {isBullMode
+            ? `SOL is up ${formatPct(Math.abs(priceChangePct))}. Your staking rewards added ${formatUsd(rewardsEarnedUsd)} on top — money you wouldn't have without staking.`
+            : offsetPct >= 100
+              ? `SOL dropped, but your staking rewards earned more than you lost. You're ${formatUsd(offsetSurplusUsd)} ahead of where you'd be without staking.`
+              : `SOL dropped ${formatPct(Math.abs(priceChangePct))}. Without staking, you'd have lost ${formatUsd(Math.abs(usdDrawdown))}. Staking rewards recovered ${formatUsd(rewardsEarnedUsd)} of that — ${formatPct(offsetPct)} of your losses cushioned.`}
+        </p>
+
+        {/* Inline comparison */}
+        {!isBullMode && offsetPct < 100 && (
+          <div className="flex gap-6 mt-4 pt-4 border-t border-[var(--glass-border)]">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground/70 mb-1">
+                Without staking
               </p>
-              <p className="text-5xl sm:text-6xl font-display text-green-400 mb-3">
-                +{formatPct(boostPct)}
+              <p className="font-mono text-sm text-red-400">
+                {formatUsd(usdDrawdown)}
               </p>
-              <p className="text-sm text-muted-foreground">
-                SOL is up {formatPct(Math.abs(priceChangePct))} and staking
-                boosted your gains by an extra{" "}
-                <span className="text-green-400 font-medium">
-                  {formatUsd(rewardsEarnedUsd)}
-                </span>
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground/70 mb-1">
+                With staking
               </p>
-            </>
-          ) : offsetPct >= 100 ? (
-            <>
-              <p className="text-sm text-muted-foreground font-mono uppercase tracking-wider mb-1">
-                Drawdown Fully Offset
+              <p className={`font-mono text-sm ${offsetPct >= 50 ? accentColor : "text-ember"}`}>
+                {formatUsd(netPositionUsd - usdValueAtEntry)}
               </p>
-              <p className="text-5xl sm:text-6xl font-display text-green-400 mb-3">
-                100%
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Staking rewards exceeded your drawdown by{" "}
-                <span className="text-green-400 font-medium">
-                  {formatUsd(offsetSurplusUsd)}
-                </span>
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="text-sm text-muted-foreground font-mono uppercase tracking-wider mb-1">
-                Drawdown Offset
-              </p>
-              <p className={`text-5xl sm:text-6xl font-display ${offsetColor} mb-3`}>
-                {formatPct(offsetPct)}
-              </p>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">
-                  Without staking:{" "}
-                  <span className="text-red-400">
-                    {formatUsd(usdDrawdown)}
-                  </span>
-                </span>
-                <span className="text-muted-foreground">
-                  With staking:{" "}
-                  <span className={offsetPct >= 50 ? "text-gold" : "text-ember"}>
-                    {formatUsd(netPositionUsd - usdValueAtEntry)}
-                  </span>
-                </span>
-              </div>
-            </>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Supporting Stats Row */}
-      <div className="grid grid-cols-2 gap-3">
-        {/* Price Impact */}
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider mb-2">
-            Price Impact
+      {/* Supporting stats — compact row */}
+      <div className="grid grid-cols-3 gap-3">
+        <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-lg p-3">
+          <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground/70 mb-1">
+            Price
           </p>
           <p
-            className={`text-lg font-mono font-semibold ${
+            className={`font-mono text-sm font-medium ${
               priceChangePct >= 0 ? "text-green-400" : "text-red-400"
             }`}
           >
             {priceChangePct >= 0 ? "+" : ""}
             {formatPct(priceChangePct)}
           </p>
-          <p className="text-xs text-muted-foreground font-mono mt-1">
+          <p className="font-mono text-[10px] text-muted-foreground/50 mt-0.5">
             ${entryPrice.toFixed(0)} → ${(usdValueNow / stakedSol).toFixed(0)}
           </p>
         </div>
 
-        {/* Staking Rewards */}
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider mb-2">
-            Rewards Earned
+        <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-lg p-3">
+          <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground/70 mb-1">
+            Rewards
           </p>
-          <p className="text-lg font-mono font-semibold text-green-400">
-            +{formatSol(rewardsEarnedSol)} SOL
+          <p className="font-mono text-sm font-medium text-green-400">
+            +{formatSol(rewardsEarnedSol)}
           </p>
-          <p className="text-xs text-muted-foreground font-mono mt-1">
+          <p className="font-mono text-[10px] text-muted-foreground/50 mt-0.5">
             ≈ {formatUsd(rewardsEarnedUsd)}
           </p>
         </div>
+
+        <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-lg p-3">
+          <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground/70 mb-1">
+            {daysToBreakeven !== null && daysToBreakeven > 0
+              ? "Full Offset"
+              : "Net P&L"}
+          </p>
+          {daysToBreakeven !== null && daysToBreakeven > 0 ? (
+            <>
+              <p className="font-mono text-sm font-medium text-foreground">
+                {formatDuration(daysToBreakeven)}
+              </p>
+              <p className="font-mono text-[10px] text-muted-foreground/50 mt-0.5">
+                at current APY
+              </p>
+            </>
+          ) : (
+            <>
+              <p
+                className={`font-mono text-sm font-medium ${
+                  netPositionUsd - usdValueAtEntry >= 0
+                    ? "text-green-400"
+                    : "text-red-400"
+                }`}
+              >
+                {formatUsd(netPositionUsd - usdValueAtEntry)}
+              </p>
+              <p className="font-mono text-[10px] text-muted-foreground/50 mt-0.5">
+                with rewards
+              </p>
+            </>
+          )}
+        </div>
       </div>
 
-      {/* Breakeven Card (only in bear mode when not broken even) */}
+      {/* Progress bar — only when in bear mode and not fully offset */}
       {daysToBreakeven !== null && daysToBreakeven > 0 && (
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider mb-2">
-            Time to Full Offset
-          </p>
-          <div className="flex items-center justify-between">
-            <p className="text-lg font-mono font-semibold text-foreground">
-              {formatDuration(daysToBreakeven)}
-            </p>
-            <p className="text-xs text-muted-foreground font-mono">
-              at current APY
-            </p>
-          </div>
-          {/* Progress bar */}
-          <div className="mt-3 h-1.5 bg-border rounded-full overflow-hidden">
-            <div
-              className={`h-full rounded-full transition-all duration-500 ${
-                offsetPct >= 75
-                  ? "bg-green-400"
-                  : offsetPct >= 25
-                    ? "bg-gold"
-                    : "bg-ember"
-              }`}
-              style={{ width: `${Math.min(offsetPct, 100)}%` }}
-            />
-          </div>
+        <div className="h-1 bg-[var(--glass-bg)] rounded-full overflow-hidden">
+          <div
+            className={`h-full rounded-full transition-all duration-700 ease-out ${
+              isGreen ? "bg-green-400" : isGold ? "bg-gold" : "bg-ember"
+            }`}
+            style={{ width: `${Math.min(offsetPct, 100)}%` }}
+          />
         </div>
       )}
     </div>

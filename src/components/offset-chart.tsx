@@ -21,28 +21,28 @@ export function OffsetChart({ data, isBullMode }: OffsetChartProps) {
   if (data.length === 0) return null
 
   return (
-    <div className="rounded-xl border border-border bg-card p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
-          Portfolio Value Over Time
-        </h3>
-        <div className="flex items-center gap-4 text-xs font-mono">
+    <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl p-6">
+      <div className="flex items-center justify-between mb-6">
+        <p className="font-mono text-[13px] uppercase tracking-[0.05em] text-foreground">
+          // PORTFOLIO OVER TIME
+        </p>
+        <div className="flex items-center gap-4 text-[11px] font-mono">
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-0.5 bg-red-400 rounded-full" />
-            <span className="text-muted-foreground">Without staking</span>
+            <div className="w-3 h-[2px] bg-red-400 rounded-full" />
+            <span className="text-muted-foreground/70">Without staking</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div
-              className={`w-3 h-0.5 rounded-full ${
+              className={`w-3 h-[2px] rounded-full ${
                 isBullMode ? "bg-green-400" : "bg-gold"
               }`}
             />
-            <span className="text-muted-foreground">With staking</span>
+            <span className="text-muted-foreground/70">With staking</span>
           </div>
         </div>
       </div>
 
-      <div className="h-[280px] -ml-2">
+      <div className="h-[260px] -ml-2">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={data}
@@ -62,12 +62,8 @@ export function OffsetChart({ data, isBullMode }: OffsetChartProps) {
                 />
               </linearGradient>
               <linearGradient id="portfolioGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={CHART_COLORS.red} stopOpacity={0.1} />
-                <stop
-                  offset="100%"
-                  stopColor={CHART_COLORS.red}
-                  stopOpacity={0}
-                />
+                <stop offset="0%" stopColor={CHART_COLORS.red} stopOpacity={0.08} />
+                <stop offset="100%" stopColor={CHART_COLORS.red} stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid {...GRID_PROPS} />
@@ -88,14 +84,18 @@ export function OffsetChart({ data, isBullMode }: OffsetChartProps) {
                   ? "Without staking"
                   : "With staking",
               ]}
-              labelStyle={{ color: CHART_COLORS.muted, fontFamily: "IBM Plex Mono", fontSize: 11 }}
+              labelStyle={{
+                color: CHART_COLORS.muted,
+                fontFamily: "IBM Plex Mono",
+                fontSize: 11,
+              }}
             />
             <Area
               type="monotone"
               dataKey="portfolioValue"
               stroke={CHART_COLORS.red}
               fill="url(#portfolioGradient)"
-              strokeWidth={2}
+              strokeWidth={1.5}
               dot={false}
               activeDot={{ r: 3, fill: CHART_COLORS.red }}
             />
@@ -104,7 +104,7 @@ export function OffsetChart({ data, isBullMode }: OffsetChartProps) {
               dataKey="portfolioWithRewards"
               stroke={isBullMode ? CHART_COLORS.green : CHART_COLORS.gold}
               fill="url(#offsetGradient)"
-              strokeWidth={2}
+              strokeWidth={1.5}
               dot={false}
               activeDot={{
                 r: 3,

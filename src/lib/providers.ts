@@ -22,20 +22,6 @@ export const PROVIDERS: StakingProvider[] = [
     type: "lst",
   },
   {
-    id: "jito",
-    name: "Jito",
-    apy: 0.073,
-    commission: 0,
-    type: "lst",
-  },
-  {
-    id: "marinade",
-    name: "Marinade",
-    apy: 0.068,
-    commission: 0,
-    type: "lst",
-  },
-  {
     id: "custom",
     name: "Custom APY",
     apy: 0.07,
