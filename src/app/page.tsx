@@ -195,6 +195,7 @@ function BearOffsetApp() {
             <OffsetChart
               data={result.chartData}
               isBullMode={result.isBullMode}
+              totalDrawdownUsd={result.usdDrawdown}
             />
 
             <ShareCard
