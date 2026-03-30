@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { InputForm } from "@/components/input-form"
 import { ResultCards } from "@/components/result-cards"
-import { OffsetChart } from "@/components/offset-chart"
+import { MissedRewards } from "@/components/missed-rewards"
 import { ShareCard } from "@/components/share-card"
 import { CtaSection } from "@/components/cta-section"
 import {
@@ -192,10 +192,11 @@ function BearOffsetApp() {
         {/* Below the fold: Chart, Share, CTAs */}
         {result && (
           <div className="flex flex-col gap-8 mt-8">
-            <OffsetChart
-              data={result.chartData}
-              isBullMode={result.isBullMode}
-              totalDrawdownUsd={result.usdDrawdown}
+            <MissedRewards
+              stakedSol={stakedSol}
+              currentPrice={currentPrice!}
+              apy={apy}
+              providerName={provider.name}
             />
 
             <ShareCard

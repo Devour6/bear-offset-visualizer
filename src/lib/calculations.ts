@@ -29,15 +29,6 @@ export interface OffsetResult {
   isBullMode: boolean // true when SOL price is up
   boostPct: number // extra % gain from staking in bull mode
 
-  // Chart data
-  chartData: ChartDataPoint[]
-}
-
-export interface ChartDataPoint {
-  day: number
-  date: string
-  portfolioValue: number // SOL-only value in USD
-  portfolioWithRewards: number // SOL + cumulative rewards in USD
 }
 
 /**
@@ -115,9 +106,6 @@ export function calculateOffset(inputs: OffsetInputs): OffsetResult {
     }
   }
 
-  // Generate chart data (one point per day, sampled for performance)
-  const chartData = generateChartData(inputs)
-
   return {
     priceChangePct,
     usdValueAtEntry,
@@ -131,69 +119,7 @@ export function calculateOffset(inputs: OffsetInputs): OffsetResult {
     daysToBreakeven,
     isBullMode,
     boostPct,
-    chartData,
   }
-}
-
-/**
- * Generate chart data points for the offset visualization.
- * Uses linear interpolation between entry and current price for simplicity.
- * In v2 this would use real historical price data.
- */
-function generateChartData(inputs: OffsetInputs): ChartDataPoint[] {
-  const { stakedSol, entryPrice, currentPrice, apy, daysStaked } = inputs
-  if (daysStaked <= 0) return []
-
-  // Sample at most 90 points for performance
-  const maxPoints = 90
-  const step = Math.max(1, Math.floor(daysStaked / maxPoints))
-  const points: ChartDataPoint[] = []
-
-  const startDate = new Date()
-  startDate.setDate(startDate.getDate() - daysStaked)
-
-  for (let day = 0; day <= daysStaked; day += step) {
-    // Linear price interpolation (simplified — v2 uses real historical data)
-    const progress = daysStaked > 0 ? day / daysStaked : 1
-    const priceAtDay = entryPrice + (currentPrice - entryPrice) * progress
-
-    const portfolioValue = stakedSol * priceAtDay
-    const rewardsSol = calculateCompoundRewards(stakedSol, apy, day)
-    const portfolioWithRewards = portfolioValue + rewardsSol * priceAtDay
-
-    const date = new Date(startDate)
-    date.setDate(date.getDate() + day)
-
-    points.push({
-      day,
-      date: date.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      }),
-      portfolioValue: Math.round(portfolioValue * 100) / 100,
-      portfolioWithRewards: Math.round(portfolioWithRewards * 100) / 100,
-    })
-  }
-
-  // Always include the last day
-  if (points[points.length - 1]?.day !== daysStaked) {
-    const rewardsSol = calculateCompoundRewards(stakedSol, apy, daysStaked)
-    const date = new Date()
-    points.push({
-      day: daysStaked,
-      date: date.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      }),
-      portfolioValue: Math.round(stakedSol * currentPrice * 100) / 100,
-      portfolioWithRewards:
-        Math.round(
-          (stakedSol * currentPrice + rewardsSol * currentPrice) * 100
-        ) / 100,
-    })
-  }
-
-  return points
 }
 
 /**
