@@ -36,7 +36,7 @@ export function ShareCard({
     days: daysStaked.toString(),
   })
 
-  const shareUrl = `https://bear.phaselabs.io/?${shareParams.toString()}`
+  const shareUrl = `https://offset.phaselabs.io/?${shareParams.toString()}`
   const ogUrl = `/api/og?${shareParams.toString()}`
 
   const heroText = isBullMode
@@ -56,7 +56,7 @@ export function ShareCard({
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = "bear-offset.png"
+      a.download = "offset-by-phase.png"
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -70,18 +70,18 @@ export function ShareCard({
     <div className="flex gap-3">
       <button
         onClick={handleDownload}
-        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] hover:bg-[var(--glass-bg-hover)] hover:border-[var(--glass-border-hover)] text-foreground text-[13px] font-mono transition-all duration-150"
+        className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] hover:bg-[var(--glass-bg-hover)] hover:border-[var(--glass-border-hover)] text-foreground text-sm transition-all duration-150"
       >
-        <Download className="w-3.5 h-3.5" />
+        <Download className="w-4 h-4" />
         Download
       </button>
       <a
         href={`https://twitter.com/intent/tweet?text=${tweetText}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-gold text-dark text-[13px] font-mono font-medium hover:bg-gold/90 transition-all duration-150"
+        className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-gold text-dark text-sm font-medium hover:bg-gold/90 transition-all duration-150"
       >
-        <Share2 className="w-3.5 h-3.5" />
+        <Share2 className="w-4 h-4" />
         Share on X
       </a>
     </div>

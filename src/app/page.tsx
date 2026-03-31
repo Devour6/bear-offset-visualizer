@@ -14,7 +14,7 @@ import {
 } from "@/lib/calculations"
 import { getProvider, updateProviderApy } from "@/lib/providers"
 
-function BearOffsetApp() {
+function OffsetApp() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
@@ -126,56 +126,47 @@ function BearOffsetApp() {
     <main className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-[var(--glass-border)]">
-        <div className="max-w-5xl mx-auto px-6 py-5">
-          <h1 className="text-xl sm:text-2xl font-display text-gold uppercase tracking-wide">
-            Bear Offset Visualizer
+        <div className="max-w-2xl mx-auto px-6 py-5 flex items-baseline justify-between">
+          <h1 className="text-2xl font-display text-gold uppercase tracking-wide">
+            Offset
           </h1>
-          <p className="text-[13px] text-muted-foreground/60 font-light mt-0.5">
-            See how staking rewards cushion your losses when SOL drops
-          </p>
+          <span className="text-xs text-muted-foreground/40 font-mono">by Phase</span>
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto px-6 py-6">
-        {/* 2-column: inputs left, result right */}
-        <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6 items-start">
-          <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl p-5">
-            <InputForm
-              stakedSol={stakedSol}
-              entryDate={entryDate}
-              entryPrice={entryPrice}
-              providerId={providerId}
-              customApy={customApy}
-              onStakedSolChange={setStakedSol}
-              onEntryDateChange={setEntryDate}
-              onEntryPriceChange={setEntryPrice}
-              onProviderChange={setProviderId}
-              onCustomApyChange={setCustomApy}
-              isLoadingPrice={isLoadingPrice}
-              onRefetchPrice={() => setPriceFetchKey((k) => k + 1)}
-            />
-          </div>
+      <div className="max-w-2xl mx-auto px-6 py-8 flex flex-col gap-8">
+        {/* Inputs */}
+        <InputForm
+          stakedSol={stakedSol}
+          entryDate={entryDate}
+          entryPrice={entryPrice}
+          providerId={providerId}
+          customApy={customApy}
+          onStakedSolChange={setStakedSol}
+          onEntryDateChange={setEntryDate}
+          onEntryPriceChange={setEntryPrice}
+          onProviderChange={setProviderId}
+          onCustomApyChange={setCustomApy}
+          isLoadingPrice={isLoadingPrice}
+          onRefetchPrice={() => setPriceFetchKey((k) => k + 1)}
+        />
 
-          <div className="min-h-[200px]">
-            {isLoading && !result && (
-              <div className="flex items-center justify-center h-[200px]">
-                <div className="w-5 h-5 border-[1.5px] border-gold/30 border-t-gold rounded-full animate-spin" />
-              </div>
-            )}
-            {result && (
-              <ResultCards
-                result={result}
-                stakedSol={stakedSol}
-                entryPrice={entryPrice!}
-                providerName={provider.name}
-              />
-            )}
+        {/* Results */}
+        {isLoading && !result && (
+          <div className="flex items-center justify-center h-40">
+            <div className="w-5 h-5 border-[1.5px] border-gold/30 border-t-gold rounded-full animate-spin" />
           </div>
-        </div>
+        )}
 
-        {/* Below fold — tight vertical stack */}
         {result && (
-          <div className="flex flex-col gap-5 mt-6">
+          <div className="flex flex-col gap-6">
+            <ResultCards
+              result={result}
+              stakedSol={stakedSol}
+              entryPrice={entryPrice!}
+              providerName={provider.name}
+            />
+
             <MissedRewards
               stakedSol={stakedSol}
               currentPrice={currentPrice!}
@@ -201,16 +192,16 @@ function BearOffsetApp() {
         )}
       </div>
 
-      <footer className="border-t border-[var(--glass-border)] mt-8">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <p className="text-[10px] text-muted-foreground/30 font-mono">
-            bear.phaselabs.io
+      <footer className="border-t border-[var(--glass-border)] mt-4">
+        <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
+          <p className="text-xs text-muted-foreground/30 font-mono">
+            offset.phaselabs.io
           </p>
           <a
             href="https://phase.cc"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-muted-foreground/30 font-mono hover:text-muted-foreground/50 transition-colors"
+            className="text-xs text-muted-foreground/30 font-mono hover:text-muted-foreground/50 transition-colors"
           >
             Powered by Phase
           </a>
@@ -229,7 +220,7 @@ export default function Page() {
         </div>
       }
     >
-      <BearOffsetApp />
+      <OffsetApp />
     </Suspense>
   )
 }

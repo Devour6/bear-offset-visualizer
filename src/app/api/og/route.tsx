@@ -79,7 +79,7 @@ export async function GET(request: Request) {
             marginBottom: 20,
           }}
         >
-          Bear Offset Visualizer
+          Offset by Phase
         </div>
 
         <div
@@ -149,7 +149,7 @@ export async function GET(request: Request) {
           fontFamily: "Outfit",
         }}
       >
-        <div>bear.phaselabs.io</div>
+        <div>offset.phaselabs.io</div>
         <div>Powered by Phase</div>
       </div>
     </div>

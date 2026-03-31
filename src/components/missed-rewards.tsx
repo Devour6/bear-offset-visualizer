@@ -14,7 +14,6 @@ export function MissedRewards({
   stakedSol,
   currentPrice,
   apy,
-  providerName,
 }: MissedRewardsProps) {
   const [elapsedMs, setElapsedMs] = useState(0)
   const startTimeRef = useRef(Date.now())
@@ -53,40 +52,26 @@ export function MissedRewards({
     v < 0.01 ? `$${v.toFixed(6)}` : v < 1 ? `$${v.toFixed(4)}` : `$${v.toFixed(2)}`
 
   return (
-    <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl p-5 sm:p-6">
-      {/* Live counter — compact, top of card */}
-      <div className="flex items-center justify-between gap-4 mb-4 pb-4 border-b border-[var(--glass-border)]">
-        <p className="text-[13px] text-muted-foreground font-light">
-          Missing out right now:
-        </p>
-        <div className="text-right">
-          <span className="font-mono text-xl sm:text-2xl font-display text-gold tabular-nums">
-            {formatLive(missedSinceLoad)}
-          </span>
-          <span className="font-mono text-[10px] text-muted-foreground/40 ml-2">
-            {formatLive(rewardsPerSecond)}/s
-          </span>
-        </div>
+    <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl p-6">
+      {/* Live counter */}
+      <div className="flex items-center justify-between mb-5 pb-5 border-b border-[var(--glass-border)]">
+        <p className="text-sm text-muted-foreground">Missing out right now</p>
+        <span className="text-2xl font-display text-gold tabular-nums">
+          {formatLive(missedSinceLoad)}
+        </span>
       </div>
 
-      {/* Timeframe row — single compact line */}
-      <p className="text-[12px] text-muted-foreground/60 font-light mb-3">
-        {stakedSol.toLocaleString()} SOL not staked to {providerName} =
-      </p>
-      <div className="grid grid-cols-4 gap-2">
+      {/* Timeframes */}
+      <div className="grid grid-cols-4 gap-3">
         {timeframes.map((tf) => (
           <div key={tf.label} className="text-center">
-            <p className="font-mono text-base sm:text-lg font-medium text-gold">
+            <p className="text-lg font-medium text-gold">
               +{formatUsd(tf.rewards)}
             </p>
-            <p className="font-mono text-[10px] text-muted-foreground/40">{tf.label} lost</p>
+            <p className="text-xs text-muted-foreground/40 mt-0.5">{tf.label}</p>
           </div>
         ))}
       </div>
-
-      <p className="font-mono text-[10px] text-muted-foreground/30 mt-3 text-center">
-        {(apy * 100).toFixed(1)}% APY · current SOL price
-      </p>
     </div>
   )
 }

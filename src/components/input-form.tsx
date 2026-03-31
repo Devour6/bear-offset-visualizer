@@ -18,11 +18,10 @@ interface InputFormProps {
   onRefetchPrice?: () => void
 }
 
-const labelClass =
-  "font-mono text-[11px] font-normal uppercase tracking-[0.08em] text-muted-foreground block mb-1.5"
+const labelClass = "text-sm text-muted-foreground block mb-2"
 
 const inputClass =
-  "w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] px-3 py-2.5 font-mono text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none transition-colors duration-150 rounded-lg focus:border-[var(--glass-border-hover)] focus:bg-[var(--glass-bg-hover)]"
+  "w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/40 outline-none transition-colors duration-150 rounded-lg focus:border-[var(--glass-border-hover)] focus:bg-[var(--glass-bg-hover)]"
 
 export function InputForm({
   stakedSol,
@@ -44,7 +43,7 @@ export function InputForm({
   const providers = PROVIDERS.filter((p) => p.id !== "custom")
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       {/* SOL Amount */}
       <div>
         <label className={labelClass}>SOL Staked</label>
@@ -57,12 +56,12 @@ export function InputForm({
           placeholder="100"
           className={inputClass}
         />
-        <div className="flex gap-1.5 mt-2">
+        <div className="flex gap-2 mt-2.5">
           {[10, 100, 1000, 10000].map((amount) => (
             <button
               key={amount}
               onClick={() => onStakedSolChange(amount)}
-              className={`flex-1 text-[11px] font-mono py-1.5 rounded-md border transition-all duration-150 ${
+              className={`flex-1 text-sm py-2 rounded-lg border transition-all duration-150 ${
                 stakedSol === amount
                   ? "border-[var(--glass-border-hover)] bg-[var(--glass-bg-active)] text-foreground"
                   : "border-[var(--glass-border)] text-muted-foreground hover:border-[var(--glass-border-hover)] hover:text-foreground"
@@ -76,8 +75,8 @@ export function InputForm({
 
       {/* Entry Date / Price */}
       <div>
-        <div className="flex items-center justify-between mb-1.5">
-          <label className="font-mono text-[11px] font-normal uppercase tracking-[0.08em] text-muted-foreground">
+        <div className="flex items-center justify-between mb-2">
+          <label className="text-sm text-muted-foreground">
             {useCustomPrice ? "Entry Price (USD)" : "Entry Date"}
           </label>
           <button
@@ -88,7 +87,7 @@ export function InputForm({
                 onRefetchPrice?.()
               }
             }}
-            className="text-[11px] text-gold/60 hover:text-gold transition-colors font-mono uppercase tracking-[0.05em]"
+            className="text-sm text-gold/60 hover:text-gold transition-colors"
           >
             {useCustomPrice ? "use date" : "use price"}
           </button>
@@ -96,7 +95,7 @@ export function InputForm({
 
         {useCustomPrice ? (
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 font-mono text-[13px]">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/50 text-base">
               $
             </span>
             <input
@@ -108,7 +107,7 @@ export function InputForm({
                 onEntryPriceChange(e.target.value ? Number(e.target.value) : null)
               }
               placeholder="130.00"
-              className={`${inputClass} pl-7`}
+              className={`${inputClass} pl-8`}
             />
           </div>
         ) : (
@@ -122,13 +121,13 @@ export function InputForm({
               className={`${inputClass} [color-scheme:dark]`}
             />
             {isLoadingPrice && (
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                <div className="w-3.5 h-3.5 border-[1.5px] border-gold/30 border-t-gold rounded-full animate-spin" />
+              <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                <div className="w-4 h-4 border-[1.5px] border-gold/30 border-t-gold rounded-full animate-spin" />
               </div>
             )}
             {entryPrice !== null && !isLoadingPrice && (
-              <p className="mt-1.5 text-[11px] font-mono text-muted-foreground/70">
-                SOL was ${entryPrice.toFixed(2)} on this date
+              <p className="mt-1.5 text-sm text-muted-foreground/50">
+                SOL was ${entryPrice.toFixed(2)}
               </p>
             )}
           </div>
@@ -139,13 +138,12 @@ export function InputForm({
       <div>
         <label className={labelClass}>Staking Method</label>
 
-        {/* Phase + $YIELD toggle */}
         <div className="flex border border-[var(--glass-border)] rounded-lg overflow-hidden">
           {providers.map((p) => (
             <button
               key={p.id}
               onClick={() => onProviderChange(p.id)}
-              className={`flex-1 px-3 py-2.5 font-mono text-[11px] uppercase tracking-[0.05em] transition-all duration-150 ${
+              className={`flex-1 px-4 py-3 text-sm transition-all duration-150 ${
                 providerId === p.id
                   ? p.id === "phase"
                     ? "bg-[var(--glass-bg-gold)] text-gold border-r border-[var(--glass-border)]"
@@ -154,28 +152,26 @@ export function InputForm({
               }`}
             >
               <div className="font-medium">{p.name}</div>
-              <div className="text-[10px] opacity-70 mt-0.5">
+              <div className="text-xs opacity-60 mt-0.5">
                 {(p.apy * 100).toFixed(1)}% APY
-                {p.commission === 0 ? " · 0% fee" : ""}
               </div>
             </button>
           ))}
         </div>
 
-        {/* Custom APY toggle */}
         <button
           onClick={() => onProviderChange(providerId === "custom" ? "phase" : "custom")}
-          className={`mt-2 text-[11px] font-mono uppercase tracking-[0.05em] transition-colors ${
+          className={`mt-2.5 text-sm transition-colors ${
             providerId === "custom"
               ? "text-foreground"
-              : "text-muted-foreground/50 hover:text-muted-foreground"
+              : "text-muted-foreground/40 hover:text-muted-foreground"
           }`}
         >
-          {providerId === "custom" ? "← back to Phase" : "Custom APY →"}
+          {providerId === "custom" ? "Back to Phase" : "Custom APY"}
         </button>
 
         {providerId === "custom" && (
-          <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-3 mt-2.5">
             <input
               type="number"
               min={0}
@@ -183,11 +179,9 @@ export function InputForm({
               step={0.1}
               value={customApy}
               onChange={(e) => onCustomApyChange(Number(e.target.value))}
-              className={`w-24 ${inputClass}`}
+              className={`w-28 ${inputClass}`}
             />
-            <span className="text-[11px] text-muted-foreground font-mono">
-              % APY
-            </span>
+            <span className="text-sm text-muted-foreground">% APY</span>
           </div>
         )}
       </div>

@@ -24,13 +24,13 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bear.phaselabs.io"),
-  title: "Bear Offset Visualizer | Phase",
+  title: "Offset | Phase",
   description:
-    "See how staking rewards offset SOL price drawdowns. Powered by Phase.",
+    "See how staking rewards offset SOL price drops. Powered by Phase.",
   openGraph: {
-    title: "Bear Offset Visualizer | Phase",
+    title: "Offset | Phase",
     description:
-      "See how staking rewards offset SOL price drawdowns. Powered by Phase.",
+      "See how staking rewards offset SOL price drops. Powered by Phase.",
     siteName: "Phase",
     type: "website",
   },
