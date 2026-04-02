@@ -135,6 +135,16 @@ function OffsetApp() {
       </header>
 
       <div className="max-w-2xl mx-auto px-6 py-8 flex flex-col gap-8">
+        {/* Live counter — hero position, first thing on the page */}
+        {currentPrice !== null && stakedSol > 0 && (
+          <MissedRewards
+            stakedSol={stakedSol}
+            currentPrice={currentPrice}
+            apy={apy}
+            providerName={provider.name}
+          />
+        )}
+
         {/* Inputs */}
         <InputForm
           stakedSol={stakedSol}
@@ -160,13 +170,6 @@ function OffsetApp() {
 
         {result && (
           <div className="flex flex-col gap-6">
-            <MissedRewards
-              stakedSol={stakedSol}
-              currentPrice={currentPrice!}
-              apy={apy}
-              providerName={provider.name}
-            />
-
             <ResultCards
               result={result}
               stakedSol={stakedSol}
