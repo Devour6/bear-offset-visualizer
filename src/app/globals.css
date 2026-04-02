@@ -79,3 +79,12 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 }
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 24px rgba(252, 225, 132, 0.35)); }
+  50% { opacity: 0.85; filter: drop-shadow(0 0 32px rgba(252, 225, 132, 0.5)); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}

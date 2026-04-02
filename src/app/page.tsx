@@ -160,17 +160,17 @@ function OffsetApp() {
 
         {result && (
           <div className="flex flex-col gap-6">
-            <ResultCards
-              result={result}
-              stakedSol={stakedSol}
-              entryPrice={entryPrice!}
-              providerName={provider.name}
-            />
-
             <MissedRewards
               stakedSol={stakedSol}
               currentPrice={currentPrice!}
               apy={apy}
+              providerName={provider.name}
+            />
+
+            <ResultCards
+              result={result}
+              stakedSol={stakedSol}
+              entryPrice={entryPrice!}
               providerName={provider.name}
             />
 
